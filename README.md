@@ -2,11 +2,7 @@
 
 Hello everyone\! 👋
 
-Let me introduce myself, I'm **Aditya Jha**. On this occasion, I'd like to share the portfolio website project that I've developed.
-
-## 🚀 Live Demo
-
-**Website Link:** [https://github.com/adityajha2118](https://github.com/adityajha2118)
+Let me introduce myself, I'm **Aditya Kumar Jha**. On this occasion, I'd like to share the portfolio website project that I've developed.
 
 ## 🛠️ Tech Stack
 
