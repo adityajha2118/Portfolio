@@ -1,241 +1,128 @@
-import React, { useState, useEffect } from "react";
-import { Share2, User, Mail, MessageSquare, Send } from "lucide-react";
-import { Link } from "react-router-dom";
-import SocialLinks from "../components/SocialLinks";
-import Komentar from "../components/Commentar";
-import Swal from "sweetalert2";
-import AOS from "aos";
-import "aos/dist/aos.css";
-import axios from "axios";
+import React, { useEffect, memo } from "react";
+import { Mail, MapPin, Clock, Globe, Briefcase, ChevronRight, Github, Linkedin } from "lucide-react";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+const ContactForm = memo(() => (
+  <div className="bg-slate-900/50 backdrop-blur-xl border border-white/5 rounded-2xl p-8 relative group" data-aos="fade-right">
+    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl pointer-events-none"></div>
+    <h3 className="text-2xl font-bold text-white mb-6">Let's Collaborate</h3>
+    <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-slate-400">Name</label>
+          <input type="text" className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all" placeholder="John Doe" />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-slate-400">Email</label>
+          <input type="email" className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all" placeholder="john@example.com" />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-slate-400">Subject</label>
+        <input type="text" className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all" placeholder="Project Inquiry / Job Opportunity" />
+      </div>
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-slate-400">Message</label>
+        <textarea rows="5" className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all resize-none" placeholder="How can I help you?"></textarea>
+      </div>
+      <button type="submit" className="w-full py-4 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 text-white font-bold hover:scale-[1.02] transition-transform shadow-lg shadow-cyan-500/20">
+        Send Message
+      </button>
+    </form>
+  </div>
+));
+
+const InfoCard = memo(() => (
+  <div className="bg-slate-900/50 backdrop-blur-xl border border-white/5 rounded-2xl p-8" data-aos="fade-left">
+    <div className="flex items-center justify-between mb-8 pb-8 border-b border-white/10">
+      <div>
+        <h3 className="text-2xl font-bold text-white mb-2">Status</h3>
+        <p className="text-cyan-400 font-medium flex items-center gap-2">
+          <span className="relative flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+          </span>
+          Open to Opportunities
+        </p>
+      </div>
+      <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center">
+        <Briefcase className="w-8 h-8 text-cyan-400" />
+      </div>
+    </div>
+
+    <div className="space-y-6">
+      <div className="flex items-start gap-4">
+        <div className="p-3 bg-white/5 rounded-xl border border-white/10">
+          <MapPin className="w-5 h-5 text-slate-300" />
+        </div>
+        <div>
+          <h4 className="text-white font-medium">Locations</h4>
+          <p className="text-sm text-slate-400 mt-1">India & Italy (Remote/Hybrid)</p>
+        </div>
+      </div>
+      
+      <div className="flex items-start gap-4">
+        <div className="p-3 bg-white/5 rounded-xl border border-white/10">
+          <Clock className="w-5 h-5 text-slate-300" />
+        </div>
+        <div>
+          <h4 className="text-white font-medium">Response Time</h4>
+          <p className="text-sm text-slate-400 mt-1">Usually within 24 hours</p>
+        </div>
+      </div>
+      
+      <div className="flex items-start gap-4">
+        <div className="p-3 bg-white/5 rounded-xl border border-white/10">
+          <Globe className="w-5 h-5 text-slate-300" />
+        </div>
+        <div>
+          <h4 className="text-white font-medium">Interests</h4>
+          <div className="flex flex-wrap gap-2 mt-2">
+            <span className="px-2 py-1 text-xs rounded-md bg-white/5 border border-white/10 text-slate-300">Full-time</span>
+            <span className="px-2 py-1 text-xs rounded-md bg-white/5 border border-white/10 text-slate-300">Research</span>
+            <span className="px-2 py-1 text-xs rounded-md bg-white/5 border border-white/10 text-slate-300">Consulting</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="mt-8 pt-8 border-t border-white/10">
+      <h4 className="text-white font-medium mb-4">Quick Connect</h4>
+      <div className="flex gap-4">
+        <a href="mailto:your.email@example.com" className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-500/30 text-white transition-all">
+          <Mail className="w-4 h-4 text-cyan-400" /> Email
+        </a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-500/30 text-white transition-all">
+          <Linkedin className="w-4 h-4 text-cyan-400" /> LinkedIn
+        </a>
+      </div>
+    </div>
+  </div>
+));
 
 const ContactPage = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   useEffect(() => {
-    AOS.init({
-      once: false,
-    });
+    AOS.init({ once: true });
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    Swal.fire({
-      title: 'Mengirim Pesan...',
-      html: 'Harap tunggu selagi kami mengirim pesan Anda',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    });
-
-    try {
-      // Ganti dengan email Anda di FormSubmit
-      const formSubmitUrl = 'https://formsubmit.co/ekizulfarrachman@gmail.com';
-      
-      // Siapkan data form untuk FormSubmit
-      const submitData = new FormData();
-      submitData.append('name', formData.name);
-      submitData.append('email', formData.email);
-      submitData.append('message', formData.message);
-      submitData.append('_subject', 'Pesan Baru dari Website Portfolio');
-      submitData.append('_captcha', 'false'); // Nonaktifkan captcha
-      submitData.append('_template', 'table'); // Format email sebagai tabel
-
-      await axios.post(formSubmitUrl, submitData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-     
-      Swal.fire({
-        title: 'Berhasil!',
-        text: 'Pesan Anda telah berhasil terkirim!',
-        icon: 'success',
-        confirmButtonColor: '#6366f1',
-        timer: 2000,
-        timerProgressBar: true
-      });
-
-      setFormData({
-        name: "",
-        email: "",
-        message: "",
-      });
-
-    } catch (error) {
-      if (error.request && error.request.status === 0) {
-        Swal.fire({
-          title: 'Berhasil!',
-          text: 'Pesan Anda telah berhasil terkirim!',
-          icon: 'success',
-          confirmButtonColor: '#6366f1',
-          timer: 2000,
-          timerProgressBar: true
-        });
-
-        setFormData({
-          name: "",
-          email: "",
-          message: "",
-        });
-      } else {
-        Swal.fire({
-          title: 'Gagal!',
-          text: 'Terjadi kesalahan. Silakan coba lagi nanti.',
-          icon: 'error',
-          confirmButtonColor: '#6366f1'
-        });
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
-    <div className="px-[5%] sm:px-[5%] lg:px-[10%] " >
-      <div className="text-center lg:mt-[5%] mt-10 mb-2 sm:px-0 px-[5%]">
-        <h2
-          data-aos="fade-down"
-          data-aos-duration="1000"
-          className="inline-block text-3xl md:text-5xl font-bold text-center mx-auto text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] to-[#a855f7]"
-        >
-          <span
-            style={{
-              color: "#6366f1",
-              backgroundImage:
-                "linear-gradient(45deg, #6366f1 10%, #a855f7 93%)",
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            Hubungi Saya
-          </span>
+    <div className="w-full py-24 bg-transparent px-[5%] lg:px-[10%]" id="Contact">
+      <div className="text-center mb-16">
+        <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-400 mb-4 font-grotesk" data-aos="zoom-in-up">
+          Get In Touch
         </h2>
-        <p
-          data-aos="fade-up"
-          data-aos-duration="1100"
-          className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base mt-2"
-        >
-          Punya pertanyaan? Kirimi saya pesan, dan saya akan segera membalasnya.
+        <p className="text-slate-400 max-w-2xl mx-auto text-lg" data-aos="fade-up" data-aos-delay="100">
+          Interested in collaborating on intelligent systems, analytics, or machine learning research? I'd love to hear from you.
         </p>
       </div>
 
-      <div
-        className="h-auto py-10 flex items-center justify-center 2xl:pr-[3.1%] lg:pr-[3.8%]  md:px-0"
-        id="Contact"
-      >
-        <div className="container px-[1%] grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-[45%_55%] 2xl:grid-cols-[35%_65%] gap-12" >
-          <div
-        
-            className="bg-white/5 backdrop-blur-xl rounded-3xl shadow-2xl p-5 py-10 sm:p-10 transform transition-all duration-500 hover:shadow-[#6366f1]/10"
-          >
-            <div className="flex justify-between items-start mb-8">
-              <div>
-                <h2 className="text-4xl font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] to-[#a855f7]">
-                  Hubungi
-                </h2>
-                <p className="text-gray-400">
-                  Ada yang ingin didiskusikan? Kirim saya pesan dan mari kita bicara.
-                </p>
-              </div>
-              <Share2 className="w-10 h-10 text-[#6366f1] opacity-50" />
-            </div>
-
-            <form 
-              onSubmit={handleSubmit}
-              className="space-y-6"
-            >
-              <div
-                data-aos="fade-up"
-                data-aos-delay="100"
-                className="relative group"
-              >
-                <User className="absolute left-4 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#6366f1] transition-colors" />
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Nama Anda"
-                  value={formData.name}
-                  onChange={handleChange}
-                  disabled={isSubmitting}
-                  className="w-full p-4 pl-12 bg-white/10 rounded-xl border border-white/20 placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-[#6366f1]/30 transition-all duration-300 hover:border-[#6366f1]/30 disabled:opacity-50"
-                  required
-                />
-              </div>
-              <div
-                data-aos="fade-up"
-                data-aos-delay="200"
-                className="relative group"
-              >
-                <Mail className="absolute left-4 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#6366f1] transition-colors" />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email Anda"
-                  value={formData.email}
-                  onChange={handleChange}
-                  disabled={isSubmitting}
-                  className="w-full p-4 pl-12 bg-white/10 rounded-xl border border-white/20 placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-[#6366f1]/30 transition-all duration-300 hover:border-[#6366f1]/30 disabled:opacity-50"
-                  required
-                />
-              </div>
-              <div
-                data-aos="fade-up"
-                data-aos-delay="300"
-                className="relative group"
-              >
-                <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-gray-400 group-focus-within:text-[#6366f1] transition-colors" />
-                <textarea
-                  name="message"
-                  placeholder="Pesan Anda"
-                  value={formData.message}
-                  onChange={handleChange}
-                  disabled={isSubmitting}
-                  className="w-full resize-none p-4 pl-12 bg-white/10 rounded-xl border border-white/20 placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-[#6366f1]/30 transition-all duration-300 hover:border-[#6366f1]/30 h-[9.9rem] disabled:opacity-50"
-                  required
-                />
-              </div>
-              <button
-                data-aos="fade-up"
-                data-aos-delay="400"
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-[#6366f1] to-[#a855f7] text-white py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-[#6366f1]/20 active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-              >
-                <Send className="w-5 h-5" />
-                {isSubmitting ? 'Mengirim...' : 'Kirim Pesan'}
-              </button>
-            </form>
-
-            <div className="mt-10 pt-6 border-t border-white/10 flex justify-center space-x-6">
-              <SocialLinks />
-            </div>
-          </div>
-
-          <div className="  bg-white/5 backdrop-blur-xl rounded-3xl p-3 py-3 md:p-10 md:py-8 shadow-2xl transform transition-all duration-500 hover:shadow-[#6366f1]/10">
-            <Komentar />
-          </div>
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <ContactForm />
+        <InfoCard />
       </div>
     </div>
   );
 };
 
-export default ContactPage;
+export default memo(ContactPage);
